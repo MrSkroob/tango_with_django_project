@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import URLPattern, URLResolver
+from rango import views
 
-urlpatterns = [
+urlpatterns: list[URLPattern | URLResolver] = [
+    path('', views.index, name="index"),
     path('admin/', admin.site.urls),
 ]
