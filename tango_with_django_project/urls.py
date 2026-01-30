@@ -23,6 +23,7 @@ from django.urls import URLPattern, URLResolver
 urlpatterns: list[URLPattern | URLResolver] = [
     path('', views.index, name="index"),
     path("rango/", include("rango.urls")),
+    path('about/', views.about),
 
     path('admin/', admin.site.urls),
 ]
