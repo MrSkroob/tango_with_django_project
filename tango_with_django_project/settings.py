@@ -34,9 +34,9 @@ class Templates(TypedDict):
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-print(TEMPLATE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -73,6 +73,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'tango_with_django_project.urls'
 
+# FIXME: this breaks...
+STATICFILES_DIRS = [STATIC_DIR, ],
 TEMPLATES: list[Templates] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
