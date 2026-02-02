@@ -74,7 +74,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'tango_with_django_project.urls'
 
 # FIXME: this breaks...
-STATICFILES_DIRS = [STATIC_DIR, ],
+STATICFILES_DIRS = [STATIC_DIR, ]
 TEMPLATES: list[Templates] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
