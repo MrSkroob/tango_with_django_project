@@ -15,15 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rango import views
 
 # importing types
 from django.urls import URLPattern, URLResolver
 
+
 urlpatterns: list[URLPattern | URLResolver] = [
     path('', views.index, name="index"),
     path("rango/", include("rango.urls")),
-    path('about/', views.about),
 
     path('admin/', admin.site.urls),
+
+    # we slightly differ from the original tutorial by using the wildcard
+    # syntax to shut the type checker up
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ]
