@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+# from django.conf import settings
+# from django.http import HttpResponse
 
 from django.http import HttpRequest
 
@@ -12,4 +13,7 @@ def index(request: HttpRequest):
     return render(request, "rango/index.html", context=context_dict)
 
 def about(request: HttpRequest):
-    return HttpResponse("Rango says here is the about page. <a href='/rango/'>Index</a>")
+    context_dict = {
+        "about_text": "here is the about page.",
+    }
+    return render(request, "rango/about.html", context=context_dict)
