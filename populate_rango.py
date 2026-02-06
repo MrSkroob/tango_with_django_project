@@ -9,11 +9,16 @@ from rango.models import Category, Page
 from typing import TypedDict, NotRequired
 
 
+class PageTemplate(TypedDict):
+    title: str
+    url: str
+    views: NotRequired[int]
+
+
 class CategoryTemplate(TypedDict):
-    pages: list[dict[str, str]]
+    pages: list[PageTemplate]
     views: NotRequired[int]
     likes: NotRequired[int]
-
 
 
 
@@ -34,22 +39,25 @@ def add_cat(name: str, views: int=0, likes: int=0):
 
 
 def populate():
-    python_pages = [
+    python_pages: list[PageTemplate] = [
         {
             'title': 'Official Python Tutorial',
-            'url': 'http://docs.python.org/3/tutorial/'
+            'url': 'http://docs.python.org/3/tutorial/',
+            'views': 321
         },
         {
             'title': 'How to Think like a Computer Scientist',
-            'url': 'http://www.greenteapress.com/thinkpython/'
+            'url': 'http://www.greenteapress.com/thinkpython/',
+            'views': 30
         },
         {
             'title': 'Learn Python in 10 Minutes',
-            'url': 'http://www.korokithakis.net/tutorials/python/'
+            'url': 'http://www.korokithakis.net/tutorials/python/',
+            'views': -1
         }
     ]
 
-    django_pages = [
+    django_pages: list[PageTemplate] = [
         {
             'title': 'Official Django Tutorial',
             'url': 'https://docs.djangoproject.com/en/2.1/intro/tutorial01/'
@@ -64,7 +72,7 @@ def populate():
         }
     ]
 
-    other_pages = [
+    other_pages: list[PageTemplate] = [
         {
             'title': 'Bottle',
             'url': 'http://bottlepy.org/docs/dev/'
@@ -87,7 +95,8 @@ def populate():
         c = add_cat(cat, views, likes)
 
         for p in cat_data['pages']:
-            add_page(c, p['title'], p['url'])
+            page_likes = p.get('views', 0)
+            add_page(c, p['title'], p['url'], page_likes)
     
 
     for c in Category.objects.all():
