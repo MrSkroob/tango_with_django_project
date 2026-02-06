@@ -1,13 +1,25 @@
 from django.shortcuts import render
-# from django.conf import settings
-# from django.http import HttpResponse
-
+from rango.models import Category
 from django.http import HttpRequest
+
+from typing import Any
+from typing import TypedDict
+
+
+class IndexContext(TypedDict):
+    boldmessage: str
+    categories: Any
+
 
 # Create your views here.
 def index(request: HttpRequest):
-    context_dict = {
-        "boldmessage": "Crunchy, creamy, cookie, candy, cupcake!"
+
+    category_list = Category.objects.order_by('-likes')[:5]
+
+
+    context_dict: IndexContext = {
+        "boldmessage": "Crunchy, creamy, cookie, candy, cupcake!",
+        "categories": category_list
     }
 
     return render(request, "rango/index.html", context=context_dict)
