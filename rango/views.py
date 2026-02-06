@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from rango.forms import CategoryForm
+from django import forms
+from rango.forms import CategoryForm, PageForm
 from rango.models import Category, Page
 from django.http import HttpRequest
 
@@ -11,6 +12,23 @@ class IndexContext(TypedDict):
     boldmessage: str
     categories: Any
     pages: Any
+
+# TODO
+# def model_add_form(request: HttpRequest, form_class: forms.Form, html_file: str):
+#     form = form_class()
+
+#     if request.method == "POST":
+#         form = form_class(request.POST)
+        
+#         if form.is_valid():
+#             form.save(commit=True)
+
+#             return redirect("/rango/")
+#         else:
+#             print(form.errors)
+    
+#     return render(request, 'rango/add_category.html', {'form': form})
+
 
 # Create your views here.
 def add_category(request: HttpRequest):
@@ -27,6 +45,12 @@ def add_category(request: HttpRequest):
             print(form.errors)
     
     return render(request, 'rango/add_category.html', {'form': form})
+
+
+def add_page(request: HttpRequest):
+    form = PageForm()
+
+    if request
 
 
 def show_category(request: HttpRequest, category_name_slug: str):
