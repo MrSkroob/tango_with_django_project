@@ -3,5 +3,17 @@ from rango.models import Category, Page
 
 # Register your models here.
 
-admin.site.register(Category)
-admin.site.register(Page)
+
+class CategoryAdmin(admin.ModelAdmin): # type: ignore
+    # make it so only the name is editable
+    fields = ['name']
+
+
+class PageAdmin(admin.ModelAdmin): # type: ignore
+    list_display = ['title', 'category', 'url']
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Page, PageAdmin)
+
+
