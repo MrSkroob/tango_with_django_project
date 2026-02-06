@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from rango.forms import CategoryForm
 from rango.models import Category, Page
 from django.http import HttpRequest
 
@@ -10,6 +11,22 @@ class IndexContext(TypedDict):
     boldmessage: str
     categories: Any
     pages: Any
+
+# Create your views here.
+def add_category(request: HttpRequest):
+    form = CategoryForm()
+
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        
+        if form.is_valid():
+            form.save(commit=True)
+
+            return redirect("/rango/")
+        else:
+            print(form.errors)
+    
+    return render(request, 'rango/add_category.html', {'form': form})
 
 
 def show_category(request: HttpRequest, category_name_slug: str):
@@ -28,7 +45,6 @@ def show_category(request: HttpRequest, category_name_slug: str):
     return render(request, 'rango/category.html', context=context_dict)
 
 
-# Create your views here.
 def index(request: HttpRequest):
 
     category_list = Category.objects.order_by('-likes')[:5]
