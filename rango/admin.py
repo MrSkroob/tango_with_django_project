@@ -7,6 +7,7 @@ from rango.models import Category, Page
 class CategoryAdmin(admin.ModelAdmin): # type: ignore
     # make it so only the name is editable
     fields = ['name']
+    prepopulated_fields = {'slug': ('name',)}
 
 
 class PageAdmin(admin.ModelAdmin): # type: ignore
