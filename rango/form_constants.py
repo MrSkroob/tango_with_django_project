@@ -1,0 +1,2 @@
+CHAR_MAX = 128
+URL_MAX = 200
