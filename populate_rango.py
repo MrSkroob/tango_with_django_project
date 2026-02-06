@@ -6,6 +6,13 @@ import django
 django.setup()
 
 from rango.models import Category, Page
+from typing import TypedDict, NotRequired
+
+
+class CategoryTemplate(TypedDict):
+    pages: list[dict[str, str]]
+    views: NotRequired[int]
+    likes: NotRequired[int]
 
 
 
@@ -18,8 +25,10 @@ def add_page(cat: Category, title: str, url: str, views: int=0):
     return p
 
 
-def add_cat(name: str):
+def add_cat(name: str, views: int=0, likes: int=0):
     c = Category.objects.get_or_create(name=name)[0]
+    c.views = views
+    c.likes = likes
     c.save()
     return c
 
@@ -66,14 +75,17 @@ def populate():
         }
     ]
 
-    cats = {
-        'Python': {'pages': python_pages},
-        'Django': {'pages': django_pages},
+    cats: dict[str, CategoryTemplate] = {
+        'Python': {'pages': python_pages, 'views': 128, 'likes': 64},
+        'Django': {'pages': django_pages, 'views': 32, 'likes': 16},
         'Other Frameworks': {'pages': other_pages}
     }
 
     for cat, cat_data in cats.items():
-        c = add_cat(cat)
+        views = cat_data.get('views', 0)
+        likes = cat_data.get('likes', 0)
+        c = add_cat(cat, views, likes)
+
         for p in cat_data['pages']:
             add_page(c, p['title'], p['url'])
     
