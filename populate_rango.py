@@ -1,10 +1,13 @@
-import django
-from rango.models import Category, Page
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tango_with_django_project.settings')
 
 
+import django
 django.setup()
+
+from rango.models import Category, Page
+
+
 
 
 def add_page(cat: Category, title: str, url: str, views: int=0):
