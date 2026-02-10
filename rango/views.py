@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -20,6 +22,28 @@ class IndexContext(TypedDict):
 class PageContext(TypedDict):
     form: PageForm
     category: Category
+
+
+def get_server_side_cookie(request: HttpRequest, cookie: str, default_val: Any=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+
+def visitor_cookie_handler(request: HttpRequest):
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now() - last_visit_time).days > 0:
+        visits += 1
+        # re('last_visit', str(datetime.now()))
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+    
+    request.session['visits'] = visits
 
 
 # Create your views here.
@@ -89,18 +113,20 @@ def show_category(request: HttpRequest, category_name_slug: str):
 
 
 def index(request: HttpRequest):
-
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
+    visitor_cookie_handler(request)
 
     context_dict: IndexContext = {
         "boldmessage": "Crunchy, creamy, cookie, candy, cupcake!",
         "categories": category_list,
-        "pages": page_list
+        "pages": page_list,
     }
 
-    return render(request, "rango/index.html", context=context_dict)
+    response = render(request, "rango/index.html", context=context_dict)
+
+    return response
 
 
 def about(request: HttpRequest):
@@ -146,7 +172,6 @@ def register(request: HttpRequest):
 
 
 def user_login(request: HttpRequest):
-
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
