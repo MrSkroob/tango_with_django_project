@@ -43,6 +43,7 @@ def add_page(request: HttpRequest, category_name_slug: str):
     except Category.DoesNotExist:
         category = None
     
+    # can't add page to a category if it doesn't exist :v
     if category is None:
         return redirect('/rango/')
     
