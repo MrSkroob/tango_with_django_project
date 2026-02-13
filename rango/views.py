@@ -18,27 +18,22 @@ class IndexContext(TypedDict):
     categories: Any
     pages: Any
 
+class AboutContext(TypedDict):
+    about_text: str
+    visits: str
 
 class PageContext(TypedDict):
     form: PageForm
     category: Category
 
 
-def get_server_side_cookie(request: HttpRequest, cookie: str, default_val: Any=None):
-    val = request.session.get(cookie)
-    if not val:
-        val = default_val
-    return val
-
-
 def visitor_cookie_handler(request: HttpRequest):
-    visits = int(get_server_side_cookie(request, 'visits', '1'))
-    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
+    visits = int(request.session.get('visits', '1'))
+    last_visit_cookie = request.session.get('last_visit', str(datetime.now()))
     last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
 
     if (datetime.now() - last_visit_time).days > 0:
         visits += 1
-        # re('last_visit', str(datetime.now()))
         request.session['last_visit'] = str(datetime.now())
     else:
         request.session['last_visit'] = last_visit_cookie
@@ -130,8 +125,9 @@ def index(request: HttpRequest):
 
 
 def about(request: HttpRequest):
-    context_dict = {
+    context_dict: AboutContext = {
         "about_text": "here is the about page.",
+        "visits": request.session['visits']
     }
     return render(request, "rango/about.html", context=context_dict)
 
